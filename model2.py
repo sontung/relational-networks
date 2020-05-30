@@ -37,6 +37,26 @@ class ConvInputModel(nn.Module):
         return x
 
 
+class ConvInputModel2(nn.Module):
+    def __init__(self):
+        super(ConvInputModel2, self).__init__()
+
+        self.conv1 = nn.Conv2d(64, 24, 3, stride=2, padding=1)
+        self.batchNorm1 = nn.BatchNorm2d(24)
+        self.conv2 = nn.Conv2d(24, 24, 3, stride=2, padding=1)
+        self.batchNorm2 = nn.BatchNorm2d(24)
+
+    def forward(self, img):
+        """convolution"""
+        x = self.conv1(img)
+        x = self.batchNorm1(x)
+        x = F.relu(x)
+        x = self.conv2(x)
+        x = self.batchNorm2(x)
+        x = F.relu(x)
+        return x
+
+
 class QuestionEmbedModel(nn.Module):
     def __init__(self, in_size, embed=32, hidden=128):
         super(QuestionEmbedModel, self).__init__()
@@ -167,7 +187,7 @@ class RN(nn.Module):
         self.on_gpu = False
 
         # CNN
-        self.conv = ConvInputModel()
+        self.conv = ConvInputModel2()
         self.state_desc = False
 
         # LSTM
@@ -215,3 +235,8 @@ class RN(nn.Module):
 
             self.load_state_dict(checkpoint)
         print("pretrained weights loaded")
+
+if __name__ == '__main__':
+    m = ConvInputModel2()
+    o = m(torch.rand((3, 64, 32, 32)))
+    print(o.size())
