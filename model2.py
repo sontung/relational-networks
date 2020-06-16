@@ -181,13 +181,16 @@ class RelationalLayer(RelationalLayerBase):
 
 
 class RN(nn.Module):
-    def __init__(self, extraction=False):
+    def __init__(self, extraction=False, zq=True):
         super(RN, self).__init__()
         self.coord_tensor = None
         self.on_gpu = False
 
         # CNN
-        self.conv = ConvInputModel2()
+        if zq:
+            self.conv = ConvInputModel2()
+        else:
+            self.conv = ConvInputModel()
         self.state_desc = False
 
         # LSTM
